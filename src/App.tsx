@@ -1,37 +1,165 @@
-import { Route, Routes } from "react-router-dom";
-import AppLayout from "./components/AppLayout";
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
+
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import Dashboard from "./pages/Dashboard";
+import Analytics from "./pages/Analytics";
+import Tasks from "./pages/Tasks";
+import Login from "./pages/Login";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
+import AchievementsPage from "./pages/AchievementsPage";
 
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm dark:bg-slate-900">
-      <h1 className="text-3xl font-bold">{title}</h1>
+import AppLayout from "./components/AppLayout";
+import AppLoader from "./components/AppLoader";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-      <p className="mt-2 text-slate-600 dark:text-slate-400">
-        This page will be built next.
-      </p>
-    </section>
-  );
-}
+import { initialTasks } from "./data/tasks";
+
+import type { Task } from "./types/task";
 
 function App() {
+  const [isLoading, setIsLoading] =
+    useState(true);
+
+  const [tasks, setTasks] =
+    useState<Task[]>(() => {
+      const savedTasks =
+        localStorage.getItem(
+          "tasks"
+        );
+
+      return savedTasks
+        ? JSON.parse(savedTasks)
+        : initialTasks;
+    });
+
+  useEffect(() => {
+    const timer =
+      window.setTimeout(() => {
+        setIsLoading(false);
+      }, 1200);
+
+    return () =>
+      window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify(tasks)
+    );
+  }, [tasks]);
+
+  const handleCompleteTask = (
+    taskId: number
+  ) => {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === taskId
+          ? {
+            ...task,
+            completed: true,
+          }
+          : task
+      )
+    );
+  };
+
+  const handleDeleteTask = (
+    taskToDelete: Task
+  ) => {
+    setTasks((currentTasks) =>
+      currentTasks.filter(
+        (task) =>
+          task.id !==
+          taskToDelete.id
+      )
+    );
+  };
+
+  const handleEditTask = (
+    updatedTask: Task
+  ) => {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === updatedTask.id
+          ? updatedTask
+          : task
+      )
+    );
+  };
+
+  if (isLoading) {
+    return <AppLoader />;
+  }
+
   return (
     <Routes>
-      <Route element={<AppLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/tasks" element={<PlaceholderPage title="Tasks" />} />
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          path="/"
+          element={
+            <Dashboard
+              tasks={tasks}
+              setTasks={setTasks}
+            />
+          }
+        />
+
+        <Route
+          path="/tasks"
+          element={
+            <Tasks
+              tasks={tasks}
+              onComplete={
+                handleCompleteTask
+              }
+              onDelete={
+                handleDeleteTask
+              }
+              onEdit={
+                handleEditTask
+              }
+            />
+          }
+        />
+
         <Route
           path="/analytics"
-          element={<PlaceholderPage title="Analytics" />}
+          element={
+            <Analytics
+              tasks={tasks}
+            />
+          }
         />
         <Route
           path="/achievements"
-          element={<PlaceholderPage title="Achievements" />}
+          element={<AchievementsPage tasks={tasks} />}
         />
+
         <Route
           path="/settings"
-          element={<PlaceholderPage title="Settings" />}
+          element={<Settings />}
         />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
   );

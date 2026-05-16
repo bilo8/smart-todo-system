@@ -1,162 +1,150 @@
 import { useEffect, useState } from "react";
+
+import toast from "react-hot-toast";
+
 import StatsCard from "../components/StatsCard";
 import TaskCard from "../components/TaskCard";
 import AddTaskForm from "../components/AddTaskForm";
-import { initialTasks } from "../data/tasks";
-import type { Task, TaskCategory } from "../types/task";
-import { getTodayDateKey, getYesterdayDateKey } from "../utils/dateUtils";
 import WeeklyStats from "../components/WeeklyStats";
-import Achievements from "../components/Achievements";
-import { calculateAchievements } from "../utils/achievementUtils";
 import EditTaskModal from "../components/EditTaskModal";
+import DeleteTaskModal from "../components/DeleteTaskModal";
+import DailySuccessModal from "../components/DailySuccessModal";
+import { motivationMessages } from "../utils/motivationMessages";
+import { taskCompletionMessages } from "../utils/taskCompletionMessages";
+import LevelUpModal from "../components/LevelUpModal";
 
-function Dashboard() {
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    return savedTasks ? JSON.parse(savedTasks) : initialTasks;
-  });
+import type {
+  Task,
+  TaskCategory,
+} from "../types/task";
 
-  const [selectedCategory, setSelectedCategory] = useState<
+
+interface DashboardProps {
+  tasks: Task[];
+  setTasks: React.Dispatch<
+    React.SetStateAction<Task[]>
+  >;
+}
+
+function Dashboard({
+  tasks,
+  setTasks,
+}: DashboardProps) {
+  const [
+    selectedCategory,
+    setSelectedCategory,
+  ] = useState<
     TaskCategory | "All"
   >("All");
 
-  const [streak, setStreak] = useState<number>(() => {
-    const savedStreak = localStorage.getItem("streak");
-    return savedStreak ? JSON.parse(savedStreak) : 0;
+  const [editingTask, setEditingTask] =
+    useState<Task | null>(null);
+
+  const [
+    deletingTask,
+    setDeletingTask,
+  ] = useState<Task | null>(null);
+
+  const [streak, setStreak] =
+    useState<number>(() => {
+      const saved =
+        localStorage.getItem(
+          "streak"
+        );
+
+      return saved
+        ? JSON.parse(saved)
+        : 0;
+    });
+
+  const [
+    isDarkMode,
+    setIsDarkMode,
+  ] = useState<boolean>(() => {
+    return (
+      localStorage.getItem(
+        "theme"
+      ) === "dark"
+    );
   });
-
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
-
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
-
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
-
-  useEffect(() => {
-    localStorage.setItem("streak", JSON.stringify(streak));
-  }, [streak]);
 
   useEffect(() => {
     if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add(
+        "dark"
+      );
+
+      localStorage.setItem(
+        "theme",
+        "dark"
+      );
     } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove(
+        "dark"
+      );
+
+      localStorage.setItem(
+        "theme",
+        "light"
+      );
     }
   }, [isDarkMode]);
 
-  useEffect(() => {
-    if (!("Notification" in window)) return;
-
-    if (Notification.permission === "default") {
-      Notification.requestPermission();
-    }
-
-    const intervalId = window.setInterval(() => {
-      const now = new Date();
-
-      setTasks((currentTasks) =>
-        currentTasks.map((task) => {
-          if (
-            task.completed ||
-            task.reminderSent ||
-            !task.reminderAt ||
-            new Date(task.reminderAt) > now
-          ) {
-            return task;
-          }
-
-          if (Notification.permission === "granted") {
-            new Notification("Task Reminder 🔔", {
-              body: task.title,
-            });
-          }
-
-          return {
-            ...task,
-            reminderSent: true,
-          };
-        })
-      );
-    }, 30000);
-
-    return () => window.clearInterval(intervalId);
-  }, []);
-
-  const completedTasks = tasks.filter((task) => task.completed).length;
+  const completedTasks = tasks.filter(
+    (task) => task.completed
+  ).length;
 
   const totalTasks = tasks.length;
 
   const totalPoints = tasks
     .filter((task) => task.completed)
-    .reduce((sum, task) => sum + task.points, 0);
-
-  const level = Math.floor(totalPoints / 100) + 1;
-
-  const currentLevelXP = totalPoints % 100;
-
-  const progressPercentage = currentLevelXP;
-  const achievements = calculateAchievements(tasks, streak);
-
-  useEffect(() => {
-    const unlocked = achievements.find((achievement) => achievement.unlocked);
-
-    if (!unlocked) return;
-
-    const shownAchievements = JSON.parse(
-      localStorage.getItem("shownAchievements") || "[]"
-    ) as string[];
-
-    if (shownAchievements.includes(unlocked.id)) return;
-
-    setLastUnlockedAchievement(`${unlocked.icon} ${unlocked.title}`);
-
-    localStorage.setItem(
-      "shownAchievements",
-      JSON.stringify([...shownAchievements, unlocked.id])
+    .reduce(
+      (sum, task) =>
+        sum + task.points,
+      0
     );
 
-    setTimeout(() => {
-      setLastUnlockedAchievement(null);
-    }, 3000);
-  }, [achievements]);
+  const level =
+    Math.floor(totalPoints / 100) +
+    1;
 
-  const [lastUnlockedAchievement, setLastUnlockedAchievement] =
-    useState<string | null>(null);
+  const currentLevelXP =
+    totalPoints % 100;
+
 
   const filteredTasks =
     selectedCategory === "All"
       ? tasks
-      : tasks.filter((task) => task.category === selectedCategory);
+      : tasks.filter(
+        (task) =>
+          task.category ===
+          selectedCategory
+      );
 
-  const updateStreak = () => {
-    const today = getTodayDateKey();
-    const yesterday = getYesterdayDateKey();
-    const lastActiveDate = localStorage.getItem("lastActiveDate");
-
-    if (lastActiveDate === today) return;
-
-    if (lastActiveDate === yesterday) {
-      setStreak((currentStreak) => currentStreak + 1);
-    } else {
-      setStreak(1);
-    }
-
-    localStorage.setItem("lastActiveDate", today);
-  };
-
-  const handleCompleteTask = (taskId: number) => {
-    updateStreak();
-
+  const handleCompleteTask = (
+    taskId: number
+  ) => {
     setTasks((currentTasks) =>
       currentTasks.map((task) =>
-        task.id === taskId ? { ...task, completed: true } : task
+        task.id === taskId
+          ? {
+            ...task,
+            completed: true,
+          }
+          : task
       )
     );
+
+    setStreak(
+      (current) => current + 1
+    );
+
+    const randomMessage =
+      taskCompletionMessages[
+      Math.floor(Math.random() * taskCompletionMessages.length)
+      ];
+
+    toast.success(randomMessage);
   };
 
   const handleAddTask = (
@@ -171,150 +159,297 @@ function Dashboard() {
       category,
       points,
       completed: false,
-      createdAt: new Date().toISOString(),
+      createdAt:
+        new Date().toISOString(),
       reminderAt,
       reminderSent: false,
     };
 
-    setTasks((currentTasks) => [newTask, ...currentTasks]);
-  };
+    setTasks((currentTasks) => [
+      newTask,
+      ...currentTasks,
+    ]);
 
-  const handleDeleteTask = (taskId: number) => {
-    setTasks((currentTasks) =>
-      currentTasks.filter((task) => task.id !== taskId)
+    toast.success(
+      "Task added successfully"
     );
   };
 
-  const handleEditTask = (task: Task) => {
-    setEditingTask(task);
-  };
-
-  const handleSaveEditedTask = (updatedTask: Task) => {
+  const handleSaveEditedTask = (
+    updatedTask: Task
+  ) => {
     setTasks((currentTasks) =>
       currentTasks.map((task) =>
-        task.id === updatedTask.id ? updatedTask : task
+        task.id === updatedTask.id
+          ? updatedTask
+          : task
       )
     );
 
     setEditingTask(null);
+
+    toast.success(
+      "Task updated"
+    );
   };
+
+  const confirmDeleteTask = () => {
+    if (!deletingTask) return;
+
+    setTasks((currentTasks) =>
+      currentTasks.filter(
+        (task) =>
+          task.id !==
+          deletingTask.id
+      )
+    );
+
+    setDeletingTask(null);
+
+    toast.success(
+      "Task deleted"
+    );
+  };
+
+  const [dailySuccessMessage, setDailySuccessMessage] = useState<string | null>(null);
+  const [levelUpModalLevel, setLevelUpModalLevel] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (tasks.length === 0) return;
+
+    const allCompleted = tasks.every((task) => task.completed);
+    const todayKey = new Date().toISOString().split("T")[0];
+    const successShownDate = localStorage.getItem("dailySuccessShownDate");
+
+    if (allCompleted && successShownDate !== todayKey) {
+      const randomMessage =
+        motivationMessages[Math.floor(Math.random() * motivationMessages.length)];
+
+      setDailySuccessMessage(randomMessage);
+      localStorage.setItem("dailySuccessShownDate", todayKey);
+    }
+  }, [tasks]);
+
+
+
+  useEffect(() => {
+    const savedLevel = Number(localStorage.getItem("lastShownLevel") || "1");
+
+    if (level > savedLevel) {
+      setLevelUpModalLevel(level);
+      localStorage.setItem("lastShownLevel", level.toString());
+    }
+  }, [level]);
+
 
   return (
     <div>
-        {editingTask && (
-          <EditTaskModal
-            task={editingTask}
-            onClose={() => setEditingTask(null)}
-            onSave={handleSaveEditedTask}
-          />
-        )}
-        {lastUnlockedAchievement && (
-          <div className="fixed right-6 top-6 z-50 rounded-2xl bg-amber-400 px-6 py-4 font-bold text-slate-900 shadow-lg">
-            Achievement unlocked: {lastUnlockedAchievement}
-          </div>
-        )}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      {editingTask && (
+        <EditTaskModal
+          task={editingTask}
+          onClose={() =>
+            setEditingTask(null)
+          }
+          onSave={
+            handleSaveEditedTask
+          }
+        />
+      )}
+
+      {deletingTask && (
+        <DeleteTaskModal
+          task={deletingTask}
+          onCancel={() =>
+            setDeletingTask(null)
+          }
+          onConfirm={
+            confirmDeleteTask
+          }
+        />
+      )}
+
+      {dailySuccessMessage && (
+        <DailySuccessModal
+          message={dailySuccessMessage}
+          onClose={() => setDailySuccessMessage(null)}
+        />
+      )}
+      
+      {levelUpModalLevel && (
+        <LevelUpModal
+          level={levelUpModalLevel}
+          onClose={() => setLevelUpModalLevel(null)}
+        />
+      )}
+
+      <div className="rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 text-white shadow-xl">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold">
-              Smart Productivity To-Do
+            <p className="text-sm font-semibold uppercase tracking-wider text-blue-100">
+              Productivity Dashboard
+            </p>
+
+            <h1 className="mt-3 text-4xl font-black">
+              Smart Productivity
+              To-Do
             </h1>
 
-            <p className="mt-2 text-slate-600 dark:text-slate-400">
-              Manage tasks, track progress, build streaks, and stay motivated.
+            <p className="mt-3 max-w-2xl text-blue-100">
+              Manage tasks, track
+              progress, build streaks,
+              unlock badges, and stay
+              motivated every day.
             </p>
           </div>
 
           <button
-            onClick={() => setIsDarkMode((current) => !current)}
-            className="rounded-xl bg-slate-900 px-5 py-3 font-semibold text-white hover:bg-slate-700 dark:bg-white dark:text-slate-900"
+            onClick={() =>
+              setIsDarkMode(
+                (current) =>
+                  !current
+              )
+            }
+            className="rounded-2xl bg-white/20 px-5 py-3 font-semibold text-white backdrop-blur transition hover:bg-white/30"
           >
-            {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+            {isDarkMode
+              ? "☀️ Light Mode"
+              : "🌙 Dark Mode"}
           </button>
         </div>
-
-        <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatsCard
-            title="Tasks Completed"
-            value={`${completedTasks}/${totalTasks}`}
-            subtitle="Today"
-          />
-
-          <StatsCard
-            title="Current Streak"
-            value={`${streak} 🔥`}
-            subtitle="Days"
-          />
-
-          <StatsCard
-            title="Points"
-            value={`${totalPoints} XP`}
-            subtitle="Level progress"
-          />
-
-          <StatsCard
-            title="Level"
-            value={level.toString()}
-            subtitle={`${currentLevelXP}/100 XP to next level`}
-          />
-        </section>
-
-        <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm dark:bg-slate-900">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Level Progress</h3>
-
-            <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-              {currentLevelXP}/100 XP
-            </span>
-          </div>
-
-          <div className="mt-4 h-4 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-            <div
-              className="h-full rounded-full bg-blue-600 transition-all duration-500"
-              style={{ width: `${progressPercentage}%` }}
-            />
-          </div>
-        </section>
-
-        <section className="mt-10">
-          <h2 className="text-2xl font-bold">Add New Task</h2>
-
-          <AddTaskForm onAddTask={handleAddTask} />
-        </section>
-        <Achievements achievements={achievements} />
-        <WeeklyStats tasks={tasks} />
-        <section className="mt-10">
-          <h2 className="text-2xl font-bold">Today&apos;s Tasks</h2>
-
-          <div className="mt-5 flex flex-wrap gap-3">
-            {["All", "Study", "Gym", "Personal", "Work"].map((category) => (
-              <button
-                key={category}
-                onClick={() =>
-                  setSelectedCategory(category as TaskCategory | "All")
-                }
-                className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${selectedCategory === category
-                  ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
-                  : "bg-white text-slate-700 hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
-                  }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-5 space-y-4">
-            {filteredTasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onComplete={handleCompleteTask}
-                onDelete={handleDeleteTask}
-                onEdit={handleEditTask}
-              />
-            ))}
-          </div>
-        </section>
       </div>
+
+      <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <StatsCard
+          title="Tasks Completed"
+          value={`${completedTasks}/${totalTasks}`}
+          subtitle="Today progress"
+          icon="✅"
+          color="bg-green-500"
+        />
+
+        <StatsCard
+          title="Current Streak"
+          value={`${streak} 🔥`}
+          subtitle="Keep it alive"
+          icon="🔥"
+          color="bg-orange-500"
+        />
+
+        <StatsCard
+          title="Points"
+          value={`${totalPoints} XP`}
+          subtitle="Total earned"
+          icon="⭐"
+          color="bg-amber-500"
+        />
+
+        <StatsCard
+          title="Level"
+          value={level.toString()}
+          subtitle={`${currentLevelXP}/100 XP to next`}
+          icon="🏆"
+          color="bg-blue-500"
+        />
+      </section>
+
+      <WeeklyStats tasks={tasks} />
+
+      <section className="mt-10">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-black">
+              Today's Tasks
+            </h2>
+
+            <p className="mt-1 text-slate-500 dark:text-slate-400">
+              Organize and complete
+              your daily goals
+            </p>
+          </div>
+        </div>
+
+        <AddTaskForm
+          onAddTask={
+            handleAddTask
+          }
+        />
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          {[
+            "All",
+            "Study",
+            "Gym",
+            "Personal",
+            "Work",
+          ].map((category) => (
+            <button
+              key={category}
+              onClick={() =>
+                setSelectedCategory(
+                  category as
+                  | TaskCategory
+                  | "All"
+                )
+              }
+              className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${selectedCategory ===
+                category
+                ? "bg-slate-900 text-white shadow-lg dark:bg-white dark:text-slate-900"
+                : "bg-white text-slate-700 shadow-sm hover:-translate-y-1 hover:shadow-md dark:bg-slate-900 dark:text-slate-300"
+                }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-6 space-y-4">
+          {filteredTasks.length ===
+            0 ? (
+            <div className="relative overflow-hidden rounded-[32px] border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-indigo-500/5 to-purple-500/5" />
+
+              <div className="relative z-10">
+                <div className="mx-auto flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 text-6xl shadow-inner dark:from-blue-900/30 dark:to-indigo-900/30">
+                  🚀
+                </div>
+
+                <h3 className="mt-8 text-4xl font-black text-slate-900 dark:text-white">
+                  No Tasks Yet
+                </h3>
+
+                <p className="mx-auto mt-4 max-w-lg text-lg leading-8 text-slate-500 dark:text-slate-400">
+                  Start building
+                  momentum by adding
+                  your first task.
+                </p>
+              </div>
+            </div>
+          ) : (
+            filteredTasks.map(
+              (task) => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onComplete={
+                    handleCompleteTask
+                  }
+                  onDelete={() =>
+                    setDeletingTask(
+                      task
+                    )
+                  }
+                  onEdit={() =>
+                    setEditingTask(
+                      task
+                    )
+                  }
+                />
+              )
+            )
+          )}
+        </div>
+      </section>
+    </div>
   );
 }
 

@@ -34,17 +34,28 @@ function WeeklyStats({ tasks }: WeeklyStatsProps) {
   });
 
   return (
-    <section className="mt-10 rounded-2xl bg-white p-5 shadow-sm dark:bg-slate-900">
-      <h2 className="text-2xl font-bold">Weekly Statistics</h2>
+    <section className="mt-10 rounded-3xl border border-white/60 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-3xl font-black">Weekly Statistics</h2>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">
+            Track your completed tasks this week.
+          </p>
+        </div>
 
-      <div className="mt-6 h-72">
+        <div className="hidden rounded-2xl bg-blue-100 px-4 py-3 text-sm font-bold text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 sm:block">
+          📊 Weekly View
+        </div>
+      </div>
+
+      <div className="mt-8 h-80">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={weekData}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
             <XAxis dataKey="day" />
             <YAxis allowDecimals={false} />
             <Tooltip />
-            <Bar dataKey="completed" />
+            <Bar dataKey="completed" radius={[12, 12, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
