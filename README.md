@@ -67,7 +67,7 @@ A modern productivity SaaS-style To-Do application built with:
 
 Username:
 ```txt
-rami
+touka
 ```
 
 Password:
