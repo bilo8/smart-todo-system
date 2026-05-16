@@ -1,73 +1,114 @@
-# React + TypeScript + Vite
+# Smart Productivity To-Do App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern productivity SaaS-style To-Do application built with:
 
-Currently, two official plugins are available:
+- React
+- TypeScript
+- Vite
+- TailwindCSS
+- React Router
+- Recharts
+- React Hot Toast
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+# Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Authentication
+- Fake authentication system
+- Protected routes
+- Login / Logout
+- Local token storage
+- Persistent user session
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Task Management
+- Add tasks
+- Edit tasks
+- Delete tasks
+- Complete tasks
+- Task categories
+- Task reminders
+- XP points system
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Productivity Features
+- Daily streaks
+- XP leveling system
+- Achievements & badges
+- Motivational messages
+- Daily success celebration
+- Level-up celebration
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Analytics
+- Productivity dashboard
+- Weekly XP chart
+- Tasks by category chart
+- Completion rate tracking
+
+---
+
+## User Experience
+- Dark / Light mode
+- Responsive design
+- Mobile navigation
+- Glassmorphism UI
+- Beautiful modals
+- Toast notifications
+- Animated cards
+
+---
+
+# Demo Credentials
+
+Username:
+```txt
+rami
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Password:
+```txt
+123456
 ```
+
+---
+
+# Installation
+
+```bash
+npm install
+```
+
+---
+
+# Start Development Server
+
+```bash
+npm run dev
+```
+
+---
+
+# Build Production
+
+```bash
+npm run build
+```
+
+---
+
+# Future Improvements
+
+- Pomodoro timer
+- Drag & drop tasks
+- Real backend API
+- AI productivity assistant
+- Push notifications
+- PWA support
+- Real database
+- Task priorities
+- Subtasks
