@@ -185,15 +185,9 @@ function AddTaskForm({
             type="datetime-local"
             value={reminderAt}
             onChange={(e) =>
-              setReminderAt(
-                e.target.value
-              )
+              setReminderAt(e.target.value)
             }
-            style={{
-              colorScheme:
-                "dark",
-            }}
-            className="w-full cursor-pointer rounded-3xl border border-slate-300 bg-slate-50 px-5 py-5 text-lg font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:border-indigo-500 dark:focus:bg-white/10"
+            className="w-full cursor-pointer rounded-3xl border border-slate-300 bg-white px-5 py-5 text-lg font-semibold text-slate-900 shadow-sm outline-none transition hover:border-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:border-white/20 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/10"
           />
         </div>
       </div>
