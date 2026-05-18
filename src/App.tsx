@@ -10,7 +10,7 @@ import {
 
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
-import Tasks from "./pages/Tasks";
+import History from "./pages/History";
 import Login from "./pages/Login";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
@@ -66,6 +66,7 @@ function App() {
           ? {
             ...task,
             completed: true,
+            completedAt: new Date().toISOString(),
           }
           : task
       )
@@ -124,23 +125,7 @@ function App() {
           }
         />
 
-        <Route
-          path="/tasks"
-          element={
-            <Tasks
-              tasks={tasks}
-              onComplete={
-                handleCompleteTask
-              }
-              onDelete={
-                handleDeleteTask
-              }
-              onEdit={
-                handleEditTask
-              }
-            />
-          }
-        />
+        <Route path="/history" element={<History tasks={tasks} />} />
 
         <Route
           path="/analytics"

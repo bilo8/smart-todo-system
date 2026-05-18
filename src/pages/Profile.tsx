@@ -7,7 +7,7 @@ function Profile() {
     const [refresh, setRefresh] = useState(false);
 
     const authUser = JSON.parse(
-        localStorage.getItem("authUser") || "null"
+        sessionStorage.getItem("authUser") || "null"
     );
 
     const handleProfileSaved = () => {

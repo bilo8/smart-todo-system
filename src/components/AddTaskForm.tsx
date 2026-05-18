@@ -164,14 +164,16 @@ function AddTaskForm({
           <input
             type="number"
             min="1"
-            value={points}
-            onChange={(e) =>
+            value={points === 0 ? "" : points}
+            onChange={(e) => {
+              const value = e.target.value;
+
               setPoints(
-                Number(
-                  e.target.value
-                )
-              )
-            }
+                value === ""
+                  ? 0
+                  : parseInt(value, 10)
+              );
+            }}
             className="w-full rounded-3xl border border-slate-300 bg-slate-50 px-5 py-5 text-lg font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:border-indigo-500 dark:focus:bg-white/10"
           />
         </div>

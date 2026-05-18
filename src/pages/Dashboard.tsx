@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import StatsCard from "../components/StatsCard";
 import TaskCard from "../components/TaskCard";
 import AddTaskForm from "../components/AddTaskForm";
-import WeeklyStats from "../components/WeeklyStats";
 import EditTaskModal from "../components/EditTaskModal";
 import DeleteTaskModal from "../components/DeleteTaskModal";
 import DailySuccessModal from "../components/DailySuccessModal";
@@ -124,7 +123,7 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
     if (allCompleted && successShownDate !== todayKey) {
       const randomMessage =
         motivationMessages[
-          Math.floor(Math.random() * motivationMessages.length)
+        Math.floor(Math.random() * motivationMessages.length)
         ];
 
       setDailySuccessMessage(randomMessage);
@@ -148,7 +147,13 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
 
     setTasks((currentTasks) =>
       currentTasks.map((task) =>
-        task.id === taskId ? { ...task, completed: true } : task
+        task.id === taskId
+          ? {
+            ...task,
+            completed: true,
+            completedAt: new Date().toISOString(),
+          }
+          : task
       )
     );
 
@@ -156,7 +161,7 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
 
     const randomMessage =
       taskCompletionMessages[
-        Math.floor(Math.random() * taskCompletionMessages.length)
+      Math.floor(Math.random() * taskCompletionMessages.length)
       ];
 
     toast.success(randomMessage);
@@ -298,8 +303,6 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
         />
       </section>
 
-      <WeeklyStats tasks={tasks} />
-
       <section className="mt-10">
         <div>
           <h2 className="text-3xl font-black">Today&apos;s Tasks</h2>
@@ -318,11 +321,10 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
               onClick={() =>
                 setSelectedCategory(category as TaskCategory | "All")
               }
-              className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${
-                selectedCategory === category
+              className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${selectedCategory === category
                   ? "bg-slate-900 text-white shadow-lg dark:bg-white dark:text-slate-900"
                   : "bg-white text-slate-700 shadow-sm hover:-translate-y-1 hover:shadow-md dark:bg-slate-900 dark:text-slate-300"
-              }`}
+                }`}
             >
               {category}
             </button>

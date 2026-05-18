@@ -12,6 +12,7 @@ import {
 } from "recharts";
 
 import type { Task } from "../types/task";
+import WeeklyStats from "../components/WeeklyStats";
 
 interface AnalyticsProps {
   tasks: Task[];
@@ -93,6 +94,9 @@ function Analytics({
         </p>
       </div>
 
+      <WeeklyStats tasks={tasks} />
+
+
       <section className="grid gap-5 md:grid-cols-3">
         <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white shadow-xl">
           <p className="text-sm font-bold uppercase tracking-widest text-blue-100">
@@ -160,8 +164,8 @@ function Analytics({
                         key={index}
                         fill={
                           COLORS[
-                            index %
-                              COLORS.length
+                          index %
+                          COLORS.length
                           ]
                         }
                       />
@@ -259,10 +263,10 @@ function Analytics({
               {tasks.length === 0
                 ? 0
                 : Math.round(
-                    (completedTasks.length /
-                      tasks.length) *
-                      100
-                  )}
+                  (completedTasks.length /
+                    tasks.length) *
+                  100
+                )}
               %
             </h3>
           </div>
@@ -286,9 +290,9 @@ function Analytics({
               {completedTasks.length === 0
                 ? 0
                 : Math.round(
-                    totalXP /
-                      completedTasks.length
-                  )}
+                  totalXP /
+                  completedTasks.length
+                )}
             </h3>
           </div>
         </div>

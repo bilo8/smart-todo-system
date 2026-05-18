@@ -9,4 +9,5 @@ export interface Task {
   createdAt: string;
   reminderAt?: string;
   reminderSent?: boolean;
+  completedAt?: string;
 }

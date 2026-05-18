@@ -22,10 +22,9 @@ function Login() {
 
       const user = await loginUser({ username, password });
 
-      localStorage.setItem("authUser", JSON.stringify(user));
-      localStorage.setItem("accessToken", user.accessToken);
-      localStorage.setItem("refreshToken", user.refreshToken);
-
+      sessionStorage.setItem("authUser", JSON.stringify(user));
+      sessionStorage.setItem("accessToken", user.accessToken);
+      sessionStorage.setItem("refreshToken", user.refreshToken);
       toast.success(`Welcome back, ${user.firstName}!`);
 
       navigate("/");

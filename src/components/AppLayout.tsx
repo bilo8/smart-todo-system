@@ -14,9 +14,9 @@ const navItems = [
     icon: "🏠",
   },
   {
-    to: "/tasks",
-    label: "Tasks",
-    icon: "✅",
+    to: "/history",
+    label: "History",
+    icon: "🕒",
   },
   {
     to: "/analytics",
@@ -42,22 +42,15 @@ function AppLayout() {
     useState(false);
 
   const authUser = JSON.parse(
-    localStorage.getItem("authUser") ||
-    "null"
+    sessionStorage.getItem("authUser") || "null"
   );
 
   const handleLogout = () => {
-    localStorage.removeItem(
-      "accessToken"
-    );
+    sessionStorage.removeItem("accessToken");
 
-    localStorage.removeItem(
-      "refreshToken"
-    );
+    sessionStorage.removeItem("refreshToken")
 
-    localStorage.removeItem(
-      "authUser"
-    );
+    sessionStorage.removeItem("authUser");
 
     navigate("/login");
   };

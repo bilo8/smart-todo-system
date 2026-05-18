@@ -6,29 +6,29 @@ interface EditProfileModalProps {
   onSave: () => void;
 }
 
-function EditProfileModal({
-  onClose,
-  onSave,
-}: EditProfileModalProps) {
-  const authUser = JSON.parse(
-    localStorage.getItem("authUser") || "null"
-  );
+function EditProfileModal({ onClose, onSave }: EditProfileModalProps) {
+  const authUser = JSON.parse(sessionStorage.getItem("authUser") || "null");
 
-  const [firstName, setFirstName] = useState(
-    authUser?.firstName || ""
-  );
+  const [firstName, setFirstName] = useState(authUser?.firstName || "");
+  const [lastName, setLastName] = useState(authUser?.lastName || "");
+  const [email, setEmail] = useState(authUser?.email || "");
+  const [image, setImage] = useState(authUser?.image || "");
 
-  const [lastName, setLastName] = useState(
-    authUser?.lastName || ""
-  );
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
-  const [email, setEmail] = useState(
-    authUser?.email || ""
-  );
+    if (!file) return;
 
-  const handleSubmit = (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(reader.result as string);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const updatedUser = {
@@ -36,17 +36,12 @@ function EditProfileModal({
       firstName,
       lastName,
       email,
+      image,
     };
 
-    localStorage.setItem(
-      "authUser",
-      JSON.stringify(updatedUser)
-    );
+    sessionStorage.setItem("authUser", JSON.stringify(updatedUser));
 
-    toast.success(
-      "Profile updated successfully"
-    );
-
+    toast.success("Profile updated successfully");
     onSave();
   };
 
@@ -56,42 +51,58 @@ function EditProfileModal({
         onSubmit={handleSubmit}
         className="w-full max-w-xl rounded-[32px] border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900"
       >
-        <h2 className="text-3xl font-black text-slate-900 dark:text-white">
-          Edit Profile
-        </h2>
+        <div className="flex items-center gap-4">
+          <img
+            src={image}
+            alt="Profile preview"
+            className="h-20 w-20 rounded-3xl object-cover shadow-lg"
+          />
 
-        <p className="mt-2 text-slate-500 dark:text-slate-400">
-          Update your personal information.
-        </p>
+          <div>
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white">
+              Edit Profile
+            </h2>
 
-        <div className="mt-6 space-y-4">
+            <p className="mt-1 text-slate-500 dark:text-slate-400">
+              Update your personal information.
+            </p>
+          </div>
+        </div>
+
+
+
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <input
             value={firstName}
-            onChange={(e) =>
-              setFirstName(e.target.value)
-            }
+            onChange={(e) => setFirstName(e.target.value)}
             placeholder="First name"
-            className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 font-semibold text-slate-900 outline-none focus:border-blue-500 focus:bg-white dark:border-white/10 dark:bg-white/5 dark:text-white"
+            className="rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 font-semibold text-slate-900 outline-none focus:border-blue-500 dark:border-white/10 dark:bg-white/5 dark:text-white"
           />
 
           <input
             value={lastName}
-            onChange={(e) =>
-              setLastName(e.target.value)
-            }
+            onChange={(e) => setLastName(e.target.value)}
             placeholder="Last name"
-            className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 font-semibold text-slate-900 outline-none focus:border-blue-500 focus:bg-white dark:border-white/10 dark:bg-white/5 dark:text-white"
-          />
-
-          <input
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-            placeholder="Email"
-            className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 font-semibold text-slate-900 outline-none focus:border-blue-500 focus:bg-white dark:border-white/10 dark:bg-white/5 dark:text-white"
+            className="rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 font-semibold text-slate-900 outline-none focus:border-blue-500 dark:border-white/10 dark:bg-white/5 dark:text-white"
           />
         </div>
+
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="mt-4 w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 font-semibold text-slate-900 outline-none focus:border-blue-500 dark:border-white/10 dark:bg-white/5 dark:text-white"
+        />
+
+        <label className="mt-6 flex cursor-pointer items-center justify-center rounded-2xl border border-dashed border-blue-400 bg-blue-50 px-5 py-4 font-bold text-blue-700 transition hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
+          Upload Profile Picture
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </label>
 
         <div className="mt-6 flex justify-end gap-3">
           <button
