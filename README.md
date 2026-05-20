@@ -1,79 +1,143 @@
-# Smart Productivity To-Do App
+# Smart Productivity System
 
-A modern productivity SaaS-style To-Do application built with:
+A modern productivity-focused task management application built with React, TypeScript, Vite, and TailwindCSS.
 
-- React
-- TypeScript
-- Vite
-- TailwindCSS
-- React Router
-- Recharts
-- React Hot Toast
+The application helps users:
+
+* Manage tasks efficiently
+* Track productivity progress
+* Build daily streaks
+* Earn XP and levels
+* Unlock achievements
+* Receive reminders and motivational feedback
 
 ---
 
-# Features
+# Technologies Used
+
+* React
+* TypeScript
+* Vite
+* TailwindCSS
+* React Router DOM
+* React Hot Toast
+* Recharts
+* Lucide React
+* DummyJSON API
+
+---
+
+# Main Features
 
 ## Authentication
-- Fake authentication system
-- Protected routes
-- Login / Logout
-- Local token storage
-- Persistent user session
+
+* Login system using DummyJSON API
+* Session-based authentication
+* Protected routes
+* Token storage using sessionStorage
+* Persistent profile customization
 
 ---
 
 ## Task Management
-- Add tasks
-- Edit tasks
-- Delete tasks
-- Complete tasks
-- Task categories
-- Task reminders
-- XP points system
+
+* Add tasks
+* Edit tasks
+* Delete tasks
+* Task completion system
+* Task categories
+* XP points system
+* Browser reminder notifications
+* Task reminders using datetime picker
 
 ---
 
 ## Productivity Features
-- Daily streaks
-- XP leveling system
-- Achievements & badges
-- Motivational messages
-- Daily success celebration
-- Level-up celebration
+
+* Daily streak system
+* Level system
+* XP progression
+* Motivation messages
+* Daily success modal
+* Level-up modal
+* Achievement system
 
 ---
 
 ## Analytics
-- Productivity dashboard
-- Weekly XP chart
-- Tasks by category chart
-- Completion rate tracking
+
+* Weekly statistics
+* Productivity charts
+* XP tracking
+* Task category tracking
+
+---
+
+## History System
+
+* Completed tasks history
+* Tasks grouped by completion day
+* Daily productivity tracking
 
 ---
 
 ## User Experience
-- Dark / Light mode
-- Responsive design
-- Mobile navigation
-- Glassmorphism UI
-- Beautiful modals
-- Toast notifications
-- Animated cards
+
+* Responsive design
+* Dark / Light mode
+* Mobile navigation
+* Modern glassmorphism UI
+* Reusable modals
+* Toast notifications
+* Animated interactions
 
 ---
 
-# Demo Credentials
+# Project Architecture
 
-Username:
-```txt
-touka
-```
+The application follows a modular React architecture:
 
-Password:
-```txt
-123456
-```
+* components → reusable UI components
+* pages → application screens/routes
+* services → API and authentication logic
+* utils → reusable helper functions
+* types → TypeScript interfaces/types
+* data → initial/mock data
+
+This architecture improves:
+
+* scalability
+* maintainability
+* reusability
+* separation of concerns
+
+---
+
+# Authentication Flow
+
+1. User logs in using DummyJSON API
+2. API returns user information and tokens
+3. Tokens are stored in sessionStorage
+4. Protected routes verify token existence
+5. User logs out automatically after browser session ends
+
+---
+
+# Motivation System
+
+The application contains a gamified motivation system.
+
+When:
+
+* a task is completed
+* all daily tasks are completed
+* the user reaches a new level
+
+The application displays:
+
+* random motivation messages
+* success notifications
+* celebration modals
 
 ---
 
@@ -93,7 +157,7 @@ npm run dev
 
 ---
 
-# Build Production
+# Build Production Version
 
 ```bash
 npm run build
@@ -103,12 +167,9 @@ npm run build
 
 # Future Improvements
 
-- Pomodoro timer
-- Drag & drop tasks
-- Real backend API
-- AI productivity assistant
-- Push notifications
-- PWA support
-- Real database
-- Task priorities
-- Subtasks
+* Real backend API
+* AI productivity assistant
+* Push notifications
+* Task priorities
+* Real database integration
+

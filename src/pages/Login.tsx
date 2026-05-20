@@ -63,14 +63,6 @@ function Login() {
                 Track tasks, earn XP, unlock badges, and keep your productivity streak alive.
               </p>
             </div>
-
-            <div className="rounded-3xl bg-white/15 p-5 backdrop-blur">
-              <p className="text-sm font-bold uppercase tracking-widest text-blue-100">
-                Demo Account
-              </p>
-              <p className="mt-3 font-bold">Username: touka</p>
-              <p className="mt-1 font-bold">Password: 123456</p>
-            </div>
           </div>
         </section>
 

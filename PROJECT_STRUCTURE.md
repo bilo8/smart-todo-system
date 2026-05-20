@@ -19,13 +19,13 @@ src/
 │   └── WeeklyStats.tsx
 │
 ├── pages/
-│   ├── Analytics.tsx
 │   ├── AchievementsPage.tsx
+│   ├── Analytics.tsx
 │   ├── Dashboard.tsx
+│   ├── History.tsx
 │   ├── Login.tsx
 │   ├── Profile.tsx
-│   ├── Settings.tsx
-│   └── Tasks.tsx
+│   └── Settings.tsx
 │
 ├── services/
 │   └── authService.ts
@@ -46,3 +46,69 @@ src/
 ├── main.tsx
 └── index.css
 ```
+
+---
+
+# Architecture Explanation
+
+## Components
+
+Reusable UI elements.
+
+Examples:
+
+* TaskCard
+* StatsCard
+* AddTaskForm
+
+---
+
+## Pages
+
+Main application screens.
+
+Examples:
+
+* Dashboard
+* Analytics
+* History
+* Profile
+
+---
+
+## Services
+
+Responsible for external communication and business logic.
+
+Example:
+
+* authService.ts handles login requests.
+
+---
+
+## Utils
+
+Reusable helper functions.
+
+Examples:
+
+* calculateAchievements()
+* motivation message utilities
+
+---
+
+## Types
+
+TypeScript interfaces and type definitions.
+
+Examples:
+
+* Task interface
+* AuthUser interface
+
+This improves:
+
+* type safety
+* IntelliSense
+* maintainability
+* development experience

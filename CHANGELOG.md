@@ -1,49 +1,54 @@
 # Changelog
 
+## v1.1.0
+
+### Added
+
+* History page grouped by day
+* Session-based authentication
+* Browser reminder notifications
+* Daily streak system
+* Level-up modal
+* Daily success modal
+* Profile image upload
+* Motivation system
+* XP level progression
+* Daily productivity tracking
+
+---
+
+### Improved
+
+* Better login page design
+* Better modal consistency
+* Better architecture structure
+* Better analytics separation
+* Better dark/light mode support
+* Better responsive UI
+* Better reusable component structure
+
+---
+
+### Fixed
+
+* Dark mode select dropdown issues
+* Reminder picker UI problems
+* XP input formatting issues
+* Delete confirmation consistency
+* Task reminder functionality
+* Profile persistence issues
+
+---
+
 ## v1.0.0
 
 ### Initial Release
 
-### Authentication
-- Added fake authentication system
-- Added protected routes
-- Added login/logout
-
-### Dashboard
-- Added productivity dashboard
-- Added stats cards
-- Added dark mode
-- Added responsive layout
-
-### Tasks
-- Add task
-- Edit task
-- Delete task
-- Complete task
-- Category filtering
-- Search functionality
-
-### Analytics
-- Added charts
-- Added productivity tracking
-- Added XP tracking
-
-### Motivation
-- Added motivational messages
-- Added daily success modal
-- Added level-up modal
-
-### User Profile
-- Added profile page
-- Added editable profile modal
-
-### Settings
-- Added settings page
-- Added reset all data functionality
-
-### UX/UI
-- Added glassmorphism background
-- Added mobile navigation
-- Added premium cards
-- Added animated interactions
-- Added modern modals
+* Dashboard
+* Tasks system
+* Authentication
+* Analytics
+* Theme switching
+* Responsive layout
+* XP system
+* Achievements
