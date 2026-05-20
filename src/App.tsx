@@ -57,45 +57,6 @@ function App() {
     );
   }, [tasks]);
 
-  const handleCompleteTask = (
-    taskId: number
-  ) => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task.id === taskId
-          ? {
-            ...task,
-            completed: true,
-            completedAt: new Date().toISOString(),
-          }
-          : task
-      )
-    );
-  };
-
-  const handleDeleteTask = (
-    taskToDelete: Task
-  ) => {
-    setTasks((currentTasks) =>
-      currentTasks.filter(
-        (task) =>
-          task.id !==
-          taskToDelete.id
-      )
-    );
-  };
-
-  const handleEditTask = (
-    updatedTask: Task
-  ) => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task.id === updatedTask.id
-          ? updatedTask
-          : task
-      )
-    );
-  };
 
   if (isLoading) {
     return <AppLoader />;

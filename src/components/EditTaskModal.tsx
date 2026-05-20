@@ -90,25 +90,24 @@ function EditTaskModal({
 
           <select
             value={category}
-            onChange={(e) =>
-              setCategory(
-                e.target
-                  .value as TaskCategory
-              )
-            }
+            onChange={(e) => setCategory(e.target.value as TaskCategory)}
             className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 font-semibold text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:border-indigo-500 dark:focus:bg-white/10"
           >
-            {categories.map(
-              (categoryItem) => (
-                <option
-                  key={categoryItem}
-                  value={categoryItem}
-                  className="bg-slate-900"
-                >
-                  {categoryItem}
-                </option>
-              )
-            )}
+            <option value="Study" className="bg-white text-slate-900">
+              Study
+            </option>
+
+            <option value="Gym" className="bg-white text-slate-900">
+              Gym
+            </option>
+
+            <option value="Personal" className="bg-white text-slate-900">
+              Personal
+            </option>
+
+            <option value="Work" className="bg-white text-slate-900">
+              Work
+            </option>
           </select>
 
           <input

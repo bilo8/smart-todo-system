@@ -34,9 +34,68 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
   );
 
   const [streak, setStreak] = useState<number>(() => {
-    const saved = localStorage.getItem("streak");
-    return saved ? JSON.parse(saved) : 0;
+    const savedStreak = localStorage.getItem("streak");
+    return savedStreak ? JSON.parse(savedStreak) : 1;
   });
+
+  useEffect(() => {
+    const today = new Date().toDateString();
+
+    const lastVisit =
+      localStorage.getItem("lastVisitDate");
+
+    if (!lastVisit) {
+      localStorage.setItem(
+        "lastVisitDate",
+        today
+      );
+
+      localStorage.setItem(
+        "streak",
+        JSON.stringify(1)
+      );
+
+      setStreak(1);
+
+      return;
+    }
+
+    const previousDate = new Date(lastVisit);
+
+    const currentDate = new Date(today);
+
+    const differenceInDays =
+      Math.floor(
+        (currentDate.getTime() -
+          previousDate.getTime()) /
+        (1000 * 60 * 60 * 24)
+      );
+
+    if (differenceInDays === 1) {
+      setStreak((current) => {
+        const updated = current + 1;
+
+        localStorage.setItem(
+          "streak",
+          JSON.stringify(updated)
+        );
+
+        return updated;
+      });
+    } else if (differenceInDays > 1) {
+      setStreak(1);
+
+      localStorage.setItem(
+        "streak",
+        JSON.stringify(1)
+      );
+    }
+
+    localStorage.setItem(
+      "lastVisitDate",
+      today
+    );
+  }, []);
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     return localStorage.getItem("theme") === "dark";
@@ -157,8 +216,6 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
       )
     );
 
-    setStreak((current) => current + 1);
-
     const randomMessage =
       taskCompletionMessages[
       Math.floor(Math.random() * taskCompletionMessages.length)
@@ -166,6 +223,8 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
 
     toast.success(randomMessage);
   };
+
+
 
   const handleAddTask = (
     title: string,
@@ -322,8 +381,8 @@ function Dashboard({ tasks, setTasks }: DashboardProps) {
                 setSelectedCategory(category as TaskCategory | "All")
               }
               className={`rounded-2xl px-5 py-3 text-sm font-semibold transition ${selectedCategory === category
-                  ? "bg-slate-900 text-white shadow-lg dark:bg-white dark:text-slate-900"
-                  : "bg-white text-slate-700 shadow-sm hover:-translate-y-1 hover:shadow-md dark:bg-slate-900 dark:text-slate-300"
+                ? "bg-slate-900 text-white shadow-lg dark:bg-white dark:text-slate-900"
+                : "bg-white text-slate-700 shadow-sm hover:-translate-y-1 hover:shadow-md dark:bg-slate-900 dark:text-slate-300"
                 }`}
             >
               {category}

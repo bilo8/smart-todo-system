@@ -40,6 +40,7 @@ function EditProfileModal({ onClose, onSave }: EditProfileModalProps) {
     };
 
     sessionStorage.setItem("authUser", JSON.stringify(updatedUser));
+    localStorage.setItem("userProfile", JSON.stringify(updatedUser));
 
     toast.success("Profile updated successfully");
     onSave();

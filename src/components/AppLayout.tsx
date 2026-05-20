@@ -169,16 +169,6 @@ function AppLayout() {
                 </button>
 
                 <button
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    navigate("/settings");
-                  }}
-                  className="mt-1 w-full rounded-2xl px-4 py-3 text-left font-semibold transition hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  ⚙️ Settings
-                </button>
-
-                <button
                   onClick={
                     handleLogout
                   }

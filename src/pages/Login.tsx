@@ -22,7 +22,12 @@ function Login() {
 
       const user = await loginUser({ username, password });
 
-      sessionStorage.setItem("authUser", JSON.stringify(user));
+      const savedProfile = localStorage.getItem("userProfile");
+
+      sessionStorage.setItem(
+        "authUser",
+        savedProfile ? savedProfile : JSON.stringify(user)
+      );
       sessionStorage.setItem("accessToken", user.accessToken);
       sessionStorage.setItem("refreshToken", user.refreshToken);
       toast.success(`Welcome back, ${user.firstName}!`);
